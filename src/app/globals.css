@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Delius&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Delius&family=Great+Vibes&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 @import "tailwindcss";
 
 
@@ -25,9 +25,24 @@ body {
   background: radial-gradient(ellipse at left, #6366f1, #a5b4fc, #e0e7ff);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  /* height: 100%; */
 }
 
 @theme {
   --font-delius: "Delius", cursive;
   --font-montserrat: "Montserrat", sans-serif;
+  --font-great-vibes: "Great Vibes", cursive;
+}
+
+/* For WebKit-based browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* Internet Explorer 10+ */
 }
