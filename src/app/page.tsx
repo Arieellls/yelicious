@@ -2,7 +2,7 @@ import Dashboard from "./pages/Dashboard";
 
 export default function Home() {
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-screen p-24">
+    <div className="flex min-h-screen w-full items-start justify-center p-0 lg:p-8">
       <Dashboard />
     </div>
   );
