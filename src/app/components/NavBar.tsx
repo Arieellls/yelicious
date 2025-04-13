@@ -1,6 +1,11 @@
+"use client";
+
 import Image from "next/image";
 import Input from "./Input";
-import { Bookmark, Menu, NotebookPen } from "lucide-react";
+import { Bookmark, Menu, NotebookPen, Search } from "lucide-react";
+import { useState } from "react";
+import { getRecipes } from "../actions/recipes";
+import { useRecipeStore } from "../store/recipeStore";
 
 export default function NavBar() {
   return (
@@ -23,6 +28,23 @@ export default function NavBar() {
 }
 
 function Actions() {
+  const [searchText, setSearchText] = useState("");
+  const setRecipes = useRecipeStore((state) => state.setRecipes);
+
+  function onSearch() {
+    useRecipeStore.getState().setLoading(true);
+    getRecipes(searchText)
+      .then((data) => {
+        setRecipes(data.data.recipes);
+      })
+      .catch((error) => {
+        console.error("Error fetching recipe:", error);
+      })
+      .finally(() => {
+        useRecipeStore.getState().setLoading(false);
+      });
+  }
+
   return (
     <div className="text-md xl:md flex h-[100%] items-center md:text-sm lg:text-sm">
       <div className="hidden md:flex">
@@ -35,10 +57,23 @@ function Actions() {
           Bookmarks
         </button>
       </div>
-      <Input
-        className="ml-5 h-8 rounded-md sm:rounded-xl md:h-10"
-        placeholder="Search for recipes..."
-      />
+      <div className="relative">
+        <Input
+          className="ml-5 h-8 rounded-md text-sm sm:rounded-xl sm:text-[16px] md:h-10"
+          placeholder="Search for recipes..."
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)} // ✅ Track changes
+        />
+        <button
+          onClick={onSearch}
+          className="absolute right-0 h-full w-[30%] cursor-pointer items-center justify-center rounded-md bg-[#6366f1] text-[12px] text-gray-200 hover:bg-[#797abe] sm:text-[16px]"
+        >
+          <div className="flex items-center justify-center gap-2">
+            <Search className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+            Search
+          </div>
+        </button>
+      </div>
       <Menu className="ml-4 cursor-pointer md:hidden" />
     </div>
   );
