@@ -1,8 +1,8 @@
 // app/api/recipes/[id]/route.ts
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
-  const id = params.id;
+export async function GET(request: NextRequest, context: { params: { id: string } }) {
+  const id = context.params.id;
 
   const endpoint = `https://forkify-api.herokuapp.com/api/v2/recipes/${id}`;
 
@@ -20,7 +20,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
     }
 
     const data = await res.json();
-    return NextResponse.json(data.data.recipe); // only send the `recipe` object
+    return NextResponse.json(data.data.recipe);
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
