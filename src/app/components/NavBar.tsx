@@ -26,12 +26,20 @@ export default function NavBar() {
     </div>
   );
 }
-
 function Actions() {
   const [searchText, setSearchText] = useState("");
+  const [showBookmarks, setShowBookmarks] = useState(false);
   const setRecipes = useRecipeStore((state) => state.setRecipes);
 
+  // Fetch and display bookmarks
+  function onShowBookmarks() {
+    const stored = JSON.parse(localStorage.getItem("bookmarks") || "[]");
+    setShowBookmarks(true);
+    setRecipes(stored); 
+  }
+
   function onSearch() {
+    setShowBookmarks(false); // go back to search mode
     useRecipeStore.getState().setLoading(true);
     getRecipes(searchText)
       .then((data) => {
@@ -48,11 +56,10 @@ function Actions() {
   return (
     <div className="text-md xl:md flex h-[100%] items-center md:text-sm lg:text-sm">
       <div className="hidden md:flex">
-        <button className="flex cursor-pointer gap-2 px-3 py-6 uppercase hover:bg-[#f1f3f5]">
-          <NotebookPen />
-          Add Recipe
-        </button>
-        <button className="flex cursor-pointer gap-2 px-3 py-6 uppercase hover:bg-[#f1f3f5]">
+        <button
+          className="flex cursor-pointer gap-2 px-3 py-6 uppercase hover:bg-[#f1f3f5]"
+          onClick={onShowBookmarks}
+        >
           <Bookmark />
           Bookmarks
         </button>
@@ -62,7 +69,7 @@ function Actions() {
           className="ml-5 h-8 rounded-md text-sm sm:rounded-xl sm:text-[16px] md:h-10"
           placeholder="Search for recipes..."
           value={searchText}
-          onChange={(e) => setSearchText(e.target.value)} // ✅ Track changes
+          onChange={(e) => setSearchText(e.target.value)}
         />
         <button
           onClick={onSearch}

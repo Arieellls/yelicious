@@ -33,7 +33,7 @@ export default function RecipeResults() {
           <Loader className="h-12 w-12 animate-spin" color="#834547" />
         </div>
       ) : recipes.length === 0 ? (
-        <p className="mt-32 flex items-center justify-center gap-3 p-5 font-semibold">
+        <p className="mt-0 flex items-center justify-center gap-3 p-5 font-semibold sm:mt-32">
           <Smile className="h-12 w-12" color="#834547" />
           Start by searching for a recipe or an ingredient. Have fun!
         </p>
@@ -74,8 +74,7 @@ export default function RecipeResults() {
           </div>
         )}
         <p className="hidden px-8 text-left text-[12px] sm:block">
-          © Version modified and improved by Arielito Manorina. Check the
-          original app to see the difference: forkify@1.0.0
+          © 2025 Arielito Manorina. All rights reserved.
         </p>
       </div>
     </div>

@@ -9,8 +9,8 @@ export async function getRecipes(name: string) {
       headers: {
         "Content-Type": "application/json",
       },
-      // You can use this if you're calling from server actions or server components in Next.js
-      cache: "no-store", // or "force-cache", "reload", depending on your needs
+
+      cache: "no-store",
     });
 
     if (!response.ok) {

@@ -1,0 +1,28 @@
+// app/api/recipes/[id]/route.ts
+import { NextResponse } from "next/server";
+
+export async function GET(req: Request, { params }: { params: { id: string } }) {
+  const id = params.id;
+
+  const endpoint = `https://forkify-api.herokuapp.com/api/v2/recipes/${id}`;
+
+  try {
+    const res = await fetch(endpoint, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      return NextResponse.json({ error: "Recipe not found." }, { status: res.status });
+    }
+
+    const data = await res.json();
+    return NextResponse.json(data.data.recipe); // only send the `recipe` object
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  }
+}

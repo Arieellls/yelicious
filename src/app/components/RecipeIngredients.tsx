@@ -19,7 +19,15 @@ function convertDecimalToFraction(quantity: number | string | null): string {
   return fraction.toString();
 }
 
-export default function RecipeIngredients({ recipe }: { recipe?: Recipe }) {
+export default function RecipeIngredients({
+  recipe,
+  originalServings,
+  totalServings,
+}: {
+  recipe?: Recipe;
+  originalServings: number;
+  totalServings: number;
+}) {
   return (
     <div className="flex w-full flex-col items-center justify-center bg-gray-200 p-4 py-15">
       <h1 className="mb-5 text-center text-xl font-semibold uppercase">
@@ -30,7 +38,9 @@ export default function RecipeIngredients({ recipe }: { recipe?: Recipe }) {
           <Ingredient
             key={index}
             description={ingredient.description}
-            quantity={convertDecimalToFraction(ingredient.quantity)}
+            quantity={convertDecimalToFraction(
+              (ingredient.quantity * totalServings) / originalServings,
+            )}
             unit={ingredient.unit}
           />
         ))}
