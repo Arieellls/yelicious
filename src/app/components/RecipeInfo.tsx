@@ -11,7 +11,6 @@ import RecipeIngredients from "./RecipeIngredients";
 import Directions from "./Directions";
 import { useRecipeStore } from "../store/recipeStore";
 import { useState, useEffect } from "react";
-import { useServingStore } from "../hooks/servingsStore";
 
 export default function RecipeInfo() {
   const selectedRecipe = useRecipeStore((state) => state.selectedRecipe);
