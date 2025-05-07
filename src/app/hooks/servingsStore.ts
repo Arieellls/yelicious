@@ -7,7 +7,7 @@ interface ServingStates {
 }
 
 // Create the store
-export const useServingStore = create<ServingStates>((set, get) => ({
+export const useServingStore = create<ServingStates>((set) => ({
   recipeServings: 0,
   setServings: (servings) => set({recipeServings: servings})
 }))
