@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Input from "./Input";
-import { Bookmark, Menu, NotebookPen, Search } from "lucide-react";
+import { Bookmark, Menu, Search } from "lucide-react";
 import { useState } from "react";
 import { getRecipes } from "../actions/recipes";
 import { useRecipeStore } from "../store/recipeStore";
@@ -28,18 +28,15 @@ export default function NavBar() {
 }
 function Actions() {
   const [searchText, setSearchText] = useState("");
-  const [showBookmarks, setShowBookmarks] = useState(false);
   const setRecipes = useRecipeStore((state) => state.setRecipes);
 
   // Fetch and display bookmarks
   function onShowBookmarks() {
     const stored = JSON.parse(localStorage.getItem("bookmarks") || "[]");
-    setShowBookmarks(true);
     setRecipes(stored); 
   }
 
   function onSearch() {
-    setShowBookmarks(false); // go back to search mode
     useRecipeStore.getState().setLoading(true);
     getRecipes(searchText)
       .then((data) => {

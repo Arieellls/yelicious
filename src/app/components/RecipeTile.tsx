@@ -3,7 +3,6 @@ import { Recipe, useRecipeStore } from "../store/recipeStore";
 import { useRouter } from "next/navigation";
 import { getRecipe } from "../actions/recipes";
 import { useServingStore } from "../hooks/servingsStore";
-import { stat } from "fs";
 
 export default function RecipeTile({ recipe }: { recipe: Recipe }) {
   const router = useRouter();

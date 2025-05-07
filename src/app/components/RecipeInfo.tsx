@@ -16,7 +16,6 @@ import { useServingStore } from "../hooks/servingsStore";
 
 export default function RecipeInfo() {
   const selectedRecipe = useRecipeStore((state) => state.selectedRecipe);
-  const reciperServings = useServingStore((state) => state.recipeServings);
   const [additionalServings, setAdditionalServings] = useState(0);
   const [bookmarked, setBookmarked] = useState(false);
 
