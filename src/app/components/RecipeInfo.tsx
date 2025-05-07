@@ -1,44 +1,115 @@
 "use client";
 
-import { Bookmark, CircleMinus, CirclePlus, Clock, Users } from "lucide-react";
+import {
+  Bookmark,
+  BookmarkCheck,
+  CircleMinus,
+  CirclePlus,
+  Clock,
+  Users,
+} from "lucide-react";
 import RecipeIngredients from "./RecipeIngredients";
 import Directions from "./Directions";
 import { useRecipeStore } from "../store/recipeStore";
+import { useState, useEffect } from "react";
+import { useServingStore } from "../hooks/servingsStore";
 
 export default function RecipeInfo() {
   const selectedRecipe = useRecipeStore((state) => state.selectedRecipe);
+  const reciperServings = useServingStore((state) => state.recipeServings);
+  const [additionalServings, setAdditionalServings] = useState(0);
+  const [bookmarked, setBookmarked] = useState(false);
+
+  const totalServings = (selectedRecipe?.servings ?? 0) + additionalServings;
+
+  // Load bookmarked state from localStorage on mount
+  useEffect(() => {
+    if (selectedRecipe) {
+      const storedBookmarks = JSON.parse(
+        localStorage.getItem("bookmarks") || "[]",
+      );
+      const isBookmarked = storedBookmarks.some(
+        (r: { id: string }) => r.id === selectedRecipe.id,
+      );
+      setBookmarked(isBookmarked);
+    }
+  }, [selectedRecipe]);
+
+  const toggleBookmark = () => {
+    if (!selectedRecipe) return;
+
+    const stored = JSON.parse(localStorage.getItem("bookmarks") || "[]");
+    const isAlready = stored.some(
+      (r: { id: string }) => r.id === selectedRecipe.id,
+    );
+
+    let updatedBookmarks;
+    if (isAlready) {
+      updatedBookmarks = stored.filter(
+        (r: { id: string }) => r.id !== selectedRecipe.id,
+      );
+      setBookmarked(false);
+    } else {
+      updatedBookmarks = [...stored, selectedRecipe];
+      setBookmarked(true);
+    }
+
+    localStorage.setItem("bookmarks", JSON.stringify(updatedBookmarks));
+  };
+
+  const addServings = () => setAdditionalServings((prev) => prev + 1);
+  const minusServings = () => {
+    const currentTotal = (selectedRecipe?.servings ?? 0) + additionalServings;
+    if (currentTotal > 1) {
+      setAdditionalServings((prev) => prev - 1);
+    }
+  };
 
   return (
     <div className="mt-10 flex h-full w-full flex-col items-center justify-around">
-      <div className="flex w-full items-center justify-around gap-10 px-10 pb-10 sm:px-0">
+      <div className="flex flex-col gap-3 w-full items-center justify-center px-10 pb-10 sm:px-0 sm:flex-row sm:gap-10">
         <div className="flex gap-5 sm:gap-10">
           <ImageLabel label={`${selectedRecipe?.cooking_time} Minutes`}>
             <Clock width={22} height={22} />
           </ImageLabel>
-          <ImageLabel label={`${selectedRecipe?.servings} Servings`}>
+          <ImageLabel label={`${totalServings} Servings`}>
             <Users width={22} height={22} />
           </ImageLabel>
-          <div className="flex items-center justify-center gap-2">
-            <CirclePlus className="cursor-pointer transition-transform duration-200 ease-in hover:scale-108" />
-            <CircleMinus className="cursor-pointer transition-transform duration-200 ease-in hover:scale-108" />
-          </div>
         </div>
-        <div className="flex cursor-pointer justify-between rounded-full border-2 border-[#735557] p-1 transition-transform duration-200 ease-in hover:scale-108 sm:p-2">
-          <Bookmark className="h-5 w-5 sm:h-7 sm:w-7" />
+        <div className="flex items-center justify-center gap-5 sm:gap-10">
+          <div className="flex items-center justify-center gap-2">
+            <CirclePlus
+              className="cursor-pointer transition-transform duration-200 ease-in hover:scale-108"
+              onClick={addServings}
+            />
+            <CircleMinus
+              className={`cursor-pointer transition-transform duration-200 ease-in hover:scale-108 ${
+                totalServings <= 1 ? "cursor-not-allowed opacity-50" : ""
+              }`}
+              onClick={minusServings}
+            />
+          </div>
+          <div
+            className="flex cursor-pointer justify-between rounded-full border-2 border-[#735557] p-1 transition-transform duration-200 ease-in hover:scale-108 sm:p-2"
+            onClick={toggleBookmark}
+          >
+            {bookmarked ? (
+              <Bookmark
+                className="h-5 w-5 fill-[#735557] sm:h-7 sm:w-7"
+                fill=""
+              />
+            ) : (
+              <Bookmark className="h-5 w-5 sm:h-7 sm:w-7" />
+            )}
+          </div>
         </div>
       </div>
 
-      {/* <div className="my-6 flex flex-col items-center justify-center gap-7 py-10 uppercase">
-        <h1 className="text-xl font-semibold">Nutritional data / serving</h1>
-        <div className="grid grid-cols-2 gap-10 sm:grid-cols-4">
-          {nutritionData({ label: "Calories", value: "200" })}
-          {nutritionData({ label: "Fat", value: "10g" })}
-          {nutritionData({ label: "Carbs", value: "30g" })}
-          {nutritionData({ label: "Protein", value: "5g" })}
-        </div>
-      </div> */}
-
-      <RecipeIngredients recipe={selectedRecipe} />
+      <RecipeIngredients
+        recipe={selectedRecipe}
+        originalServings={selectedRecipe?.servings ?? 1}
+        totalServings={totalServings}
+      />
       <Directions />
     </div>
   );
@@ -57,12 +128,3 @@ function ImageLabel({
     </div>
   );
 }
-
-// function nutritionData({ label, value }: { label: string; value: string }) {
-//   return (
-//     <div className="flex h-32 w-32 flex-col items-center justify-center rounded-md border-2 border-[#735557] p-5 text-lg font-semibold uppercase">
-//       <p>{label}</p>
-//       <p className="font-normal">{value}</p>
-//     </div>
-//   );
-// }

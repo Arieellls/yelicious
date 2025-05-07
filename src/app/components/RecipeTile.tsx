@@ -2,15 +2,19 @@ import Image from "next/image";
 import { Recipe, useRecipeStore } from "../store/recipeStore";
 import { useRouter } from "next/navigation";
 import { getRecipe } from "../actions/recipes";
+import { useServingStore } from "../hooks/servingsStore";
+import { stat } from "fs";
 
 export default function RecipeTile({ recipe }: { recipe: Recipe }) {
   const router = useRouter();
   const setSelectedRecipe = useRecipeStore((state) => state.setSelectedRecipe);
+  const setServings = useServingStore((state) => state.setServings)
 
   const handleClick = async () => {
     useRecipeStore.getState().setLoadingSelectedRecipe(true);
     const selectedRecipe = await getRecipe(recipe?.id);
     setSelectedRecipe(selectedRecipe.data.recipe);
+    setServings(selectedRecipe.data.recipe.servings)
     router.push(`/?id=${recipe.id}`, { scroll: false });
     useRecipeStore.getState().setLoadingSelectedRecipe(false);
   };
