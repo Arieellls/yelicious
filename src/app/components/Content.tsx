@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { Loader, ChefHat, Clock, Heart, BookOpen, Search } from "lucide-react";
+import { Loader, ChefHat, Clock, Heart, BookOpen } from "lucide-react";
 import RecipeResults from "../pages/RecipeResults";
 import { useRecipeStore } from "../store/recipeStore";
 import RecipeContents from "./RecipeContents";
