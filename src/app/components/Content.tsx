@@ -2,10 +2,11 @@
 
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { Loader, ChefHat, Clock, Heart, BookOpen } from "lucide-react";
+import { Loader, ChefHat, Clock, Heart, BookOpen, Search } from "lucide-react";
 import RecipeResults from "../pages/RecipeResults";
 import { useRecipeStore } from "../store/recipeStore";
 import RecipeContents from "./RecipeContents";
+import SearchQueriesList from "./SearchQueriesList";
 
 export default function Content() {
   const searchParams = useSearchParams();
@@ -38,7 +39,7 @@ export default function Content() {
     };
 
     fetchRecipe();
-  }, [id]);
+  }, [id, selectedRecipe?.id, setLoadingSelectedRecipe, setSelectedRecipe]);
 
   return (
     <div className="min-h-screen w-full items-start justify-start bg-gradient-to-bl from-[#ffe4e6] to-[#ccfbf1] shadow-md">
@@ -52,30 +53,33 @@ export default function Content() {
           <RecipeContents />
         ) : (
           <div className="flex flex-col items-center p-12 px-5 md:p-24">
-            <h1 className="text-5xl pb-6 font-light font-delius mb-12">
+            <h1 className="font-delius mb-12 pb-6 text-5xl font-light">
               Yelicious
             </h1>
-            <div className="grid gap-8 grid-cols-1 md:grid-cols-2 w-full max-w-5xl">
-              <Card 
+            <div className="grid w-full max-w-5xl grid-cols-1 gap-8 md:grid-cols-2">
+              <Card
                 icon={<ChefHat size={24} />}
                 title="Artisanal Creations"
                 description="Discover carefully crafted recipes that blend tradition with modern culinary innovation."
               />
-              <Card 
+              <Card
                 icon={<Clock size={24} />}
                 title="Effortless Elegance"
                 description="From pan to plate in minutes – sophisticated flavors that belie their simple preparation."
               />
-              <Card 
+              <Card
                 icon={<Heart size={24} />}
                 title="Mindful Nourishment"
                 description="Thoughtfully balanced meals that celebrate both wellness and exquisite taste."
               />
-              <Card 
+              <Card
                 icon={<BookOpen size={24} />}
                 title="Curated Collection"
                 description="Build your personal recipe archive with dishes that inspire your culinary journey."
               />
+            </div>
+            <div className="w-full">
+              <SearchQueriesList />
             </div>
           </div>
         )}
@@ -84,16 +88,22 @@ export default function Content() {
   );
 }
 
-function Card({ icon, title, description }: { icon: React.ReactNode, title: string; description: string }) {
+function Card({
+  icon,
+  title,
+  description,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}) {
   return (
-    <div className="flex flex-col p-6 bg-white bg-opacity-80 backdrop-blur-sm rounded-lg transition-all duration-300 ease-in-out hover:translate-y-1 border border-gray-100 shadow-sm">
-      <div className="flex items-center mb-4">
-        <div className="text-gray-600 mr-3">
-          {icon}
-        </div>
+    <div className="bg-opacity-80 flex flex-col rounded-lg border border-gray-100 bg-white p-6 shadow-sm backdrop-blur-sm transition-all duration-300 ease-in-out hover:translate-y-1">
+      <div className="mb-4 flex items-center">
+        <div className="mr-3 text-gray-600">{icon}</div>
         <h2 className="text-xl font-medium text-gray-800">{title}</h2>
       </div>
-      <p className="text-gray-600 font-light leading-relaxed">{description}</p>
+      <p className="leading-relaxed font-light text-gray-600">{description}</p>
     </div>
   );
 }
