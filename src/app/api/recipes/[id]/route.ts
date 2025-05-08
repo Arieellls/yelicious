@@ -1,8 +1,13 @@
 // app/api/recipes/[id]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest, context: { params: { id: string } }) {
-  const id = context.params.id;
+export async function GET(request: NextRequest) {
+  const url = new URL(request.url);
+  const id = url.pathname.split("/").pop(); // Gets the dynamic [id] from the URL
+
+  if (!id) {
+    return NextResponse.json({ error: "Recipe ID is required" }, { status: 400 });
+  }
 
   const endpoint = `https://forkify-api.herokuapp.com/api/v2/recipes/${id}`;
 
